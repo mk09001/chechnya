@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}Физика Плюс - Курсы теоретической физики от нобелевских лауреатов{% endblock %}
+
+{% block content %}
+<!-- Героическая секция -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Изучайте физику с лучшими умами человечества
+                </h1>
+                <p class="lead mb-4">
+                    Эксклюзивные курсы теоретической физики, составленные на основе материалов 
+                    нобелевских лауреатов. Погрузитесь в мир квантовой механики, теории относительности 
+                    и других фундаментальных открытий.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{% url 'courses:course_list' %}" class="btn btn-light btn-lg">
+                        <i class="fas fa-graduation-cap me-2"></i>Перейти к курсам
+                    </a>
+                    <a href="{% url 'landing:about_laureates' %}" class="btn btn-outline-light btn-lg">
+                        <i class="fas fa-medal me-2"></i>О лауреатах
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <i class="fas fa-atom" style="font-size: 15rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Преимущества -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Почему выбирают нас</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="fas fa-medal fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Нобелевские лауреаты</h5>
+                        <p class="card-text">
+                            Курсы составлены на основе материалов ученых, получивших Нобелевскую премию по физике
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="fas fa-graduation-cap fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Экспертное обучение</h5>
+                        <p class="card-text">
+                            Профессиональные преподаватели с глубоким пониманием теоретической физики
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 text-center p-4">
+                    <div class="card-body">
+                        <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">Гибкий график</h5>
+                        <p class="card-text">
+                            Изучайте в удобное время с пожизненным доступом к материалам курсов
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Популярные курсы -->
+{% if featured_courses %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Популярные курсы</h2>
+        <div class="row g-4">
+            {% for course in featured_courses %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card course-card">
+                    {% if course.image %}
+                        <img src="{{ course.image.url }}" class="card-img-top course-image" alt="{{ course.title }}">
+                    {% else %}
+                        <div class="card-img-top course-image bg-secondary d-flex align-items-center justify-content-center">
+                            <i class="fas fa-atom fa-3x text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ course.title }}</h5>
+                        <p class="card-text text-muted">
+                            <i class="fas fa-user me-1"></i>{{ course.laureate.name }}
+                        </p>
+                        <p class="card-text">{{ course.description|truncatewords:20 }}</p>
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="price">{{ course.price }} ₽</span>
+                                <span class="badge bg-primary">{{ course.get_level_display }}</span>
+                            </div>
+                            <a href="{% url 'courses:course_detail' course.slug %}" class="btn btn-primary w-100">
+                                Подробнее
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'courses:course_list' %}" class="btn btn-outline-primary btn-lg">
+                Смотреть все курсы
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Нобелевские лауреаты -->
+{% if laureates %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Наши нобелевские лауреаты</h2>
+        <div class="row g-4">
+            {% for laureate in laureates %}
+            <div class="col-lg-6">
+                <div class="card laureate-card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3 text-center">
+                                {% if laureate.photo %}
+                                    <img src="{{ laureate.photo.url }}" class="laureate-image mb-3" alt="{{ laureate.name }}">
+                                {% else %}
+                                    <div class="laureate-image bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fas fa-user fa-2x text-white"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-9">
+                                <h5 class="card-title">{{ laureate.name }}</h5>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-flag me-1"></i>{{ laureate.country }} • 
+                                    <i class="fas fa-trophy me-1"></i>{{ laureate.nobel_year }}
+                                </p>
+                                <p class="card-text">{{ laureate.discovery|truncatewords:15 }}</p>
+                                <a href="{% url 'landing:about_laureates' %}" class="btn btn-sm btn-outline-primary">
+                                    Узнать больше
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'landing:about_laureates' %}" class="btn btn-outline-primary btn-lg">
+                Все лауреаты
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Категории курсов -->
+{% if categories %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="section-title text-center mb-5">Категории курсов</h2>
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <i class="fas fa-microscope fa-3x text-primary mb-3"></i>
+                        <h5 class="card-title">{{ category.name }}</h5>
+                        <p class="card-text">{{ category.description|truncatewords:15 }}</p>
+                        <a href="{% url 'courses:course_list' %}?category={{ category.slug }}" class="btn btn-primary">
+                            Курсы категории
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Призыв к действию -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="section-title">Готовы начать изучение физики?</h2>
+                <p class="lead mb-4">
+                    Присоединяйтесь к тысячам студентов, которые уже изучают теоретическую физику 
+                    с лучшими умами человечества
+                </p>
+                <a href="{% url 'courses:course_list' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-rocket me-2"></i>Начать обучение
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 

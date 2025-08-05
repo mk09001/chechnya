@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+{% block title %}Корзина - Физика Плюс{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="section-title">Корзина покупок</h1>
+                <p class="lead">Проверьте выбранные курсы и оформите заказ</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Содержимое корзины -->
+<section class="py-5">
+    <div class="container">
+        {% if cart.items.all %}
+        <div class="row">
+            <!-- Список товаров -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Выбранные курсы</h5>
+                    </div>
+                    <div class="card-body">
+                        {% for item in cart.items.all %}
+                        <div class="row align-items-center border-bottom pb-3 mb-3">
+                            <div class="col-md-2">
+                                {% if item.course.image %}
+                                    <img src="{{ item.course.image.url }}" class="img-fluid rounded" alt="{{ item.course.title }}">
+                                {% else %}
+                                    <div class="bg-secondary rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                        <i class="fas fa-atom fa-2x text-white"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="mb-1">{{ item.course.title }}</h6>
+                                <p class="text-muted mb-1">
+                                    <i class="fas fa-user me-1"></i>{{ item.course.laureate.name }}
+                                </p>
+                                <small class="text-muted">
+                                    <i class="fas fa-clock me-1"></i>{{ item.course.duration }} ч • 
+                                    <i class="fas fa-folder me-1"></i>{{ item.course.category.name }}
+                                </small>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="price">{{ item.course.price }} ₽</div>
+                            </div>
+                            <div class="col-md-2 text-end">
+                                <form method="post" action="{% url 'cart:remove_from_cart' item.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                            onclick="return confirm('Удалить курс из корзины?')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Итого и оформление заказа -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>Итого</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Количество курсов:</span>
+                            <span class="fw-bold">{{ cart.get_total_items }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Общая стоимость:</span>
+                            <span class="price">{{ cart.get_total_price }} ₽</span>
+                        </div>
+                        <hr>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" onclick="alert('Функция оформления заказа будет добавлена позже')">
+                                <i class="fas fa-credit-card me-2"></i>Оформить заказ
+                            </button>
+                            <a href="{% url 'courses:course_list' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-plus me-2"></i>Добавить курсы
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Рекомендации -->
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Рекомендации</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Пожизненный доступ к курсам
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Сертификат о прохождении
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-check text-success me-2"></i>
+                                Поддержка преподавателей
+                            </li>
+                            <li>
+                                <i class="fas fa-check text-success me-2"></i>
+                                Обновления материалов
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <!-- Пустая корзина -->
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+            <h3>Корзина пуста</h3>
+            <p class="text-muted mb-4">Добавьте курсы в корзину, чтобы начать обучение</p>
+            <a href="{% url 'courses:course_list' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-graduation-cap me-2"></i>Перейти к курсам
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %} 

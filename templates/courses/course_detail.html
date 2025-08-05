@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ course.title }} - Физика Плюс{% endblock %}
+
+{% block content %}
+<!-- Заголовок курса -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'landing:landing' %}">Главная</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'courses:course_list' %}">Курсы</a></li>
+                <li class="breadcrumb-item active">{{ course.title }}</li>
+            </ol>
+        </nav>
+        
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="section-title">{{ course.title }}</h1>
+                <p class="lead mb-3">{{ course.description }}</p>
+                <div class="d-flex align-items-center gap-4 mb-3">
+                    <span class="badge bg-primary fs-6">{{ course.get_level_display }}</span>
+                    <span class="text-muted">
+                        <i class="fas fa-clock me-1"></i>{{ course.duration }} часов
+                    </span>
+                    <span class="text-muted">
+                        <i class="fas fa-folder me-1"></i>{{ course.category.name }}
+                    </span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="price display-6 mb-3">{{ course.price }} ₽</div>
+                <form method="post" action="{% url 'cart:add_to_cart' course.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-cart-plus me-2"></i>Добавить в корзину
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Основная информация о курсе -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <!-- Изображение и информация о лауреате -->
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    {% if course.image %}
+                        <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="fas fa-atom fa-4x text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">Нобелевский лауреат</h5>
+                        <div class="d-flex align-items-center mb-3">
+                            {% if course.laureate.photo %}
+                                <img src="{{ course.laureate.photo.url }}" class="laureate-image me-3" alt="{{ course.laureate.name }}">
+                            {% else %}
+                                <div class="laureate-image bg-secondary d-flex align-items-center justify-content-center me-3">
+                                    <i class="fas fa-user fa-2x text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-1">{{ course.laureate.name }}</h6>
+                                <small class="text-muted">{{ course.laureate.country }} • {{ course.laureate.nobel_year }}</small>
+                            </div>
+                        </div>
+                        <p class="card-text">{{ course.laureate.discovery|truncatewords:20 }}</p>
+                        <a href="{% url 'landing:about_laureates' %}" class="btn btn-outline-primary btn-sm">
+                            Узнать больше о лауреате
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Характеристики курса -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Характеристики</h5>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                                <strong>Уровень:</strong> {{ course.get_level_display }}
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-clock me-2 text-primary"></i>
+                                <strong>Длительность:</strong> {{ course.duration }} часов
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-folder me-2 text-primary"></i>
+                                <strong>Категория:</strong> {{ course.category.name }}
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-calendar me-2 text-primary"></i>
+                                <strong>Создан:</strong> {{ course.created_at|date:"d.m.Y" }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Содержание курса -->
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-list me-2"></i>Содержание курса</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Что вы изучите:</h6>
+                                <p>{{ course.content|linebreaks }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Результаты обучения:</h6>
+                                <ul>
+                                    <li>Глубокое понимание теоретических основ</li>
+                                    <li>Практические навыки решения задач</li>
+                                    <li>Знание современных достижений физики</li>
+                                    <li>Сертификат о прохождении курса</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+                
+                <!-- Отзывы -->
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-star me-2"></i>Отзывы студентов</h5>
+                        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#reviewModal">
+                            <i class="fas fa-plus me-1"></i>Оставить отзыв
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        {% if reviews %}
+                            {% for review in reviews %}
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <div>
+                                        <h6 class="mb-1">{{ review.name }}</h6>
+                                        <div class="rating">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= review.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">{{ review.created_at|date:"d.m.Y" }}</small>
+                                </div>
+                                <p class="mb-0">{{ review.comment }}</p>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted text-center py-3">
+                                <i class="fas fa-comments fa-2x mb-2"></i><br>
+                                Пока нет отзывов. Будьте первым!
+                            </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Модальное окно для отзыва -->
+<div class="modal fade" id="reviewModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Оставить отзыв</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Ваше имя *</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Email *</label>
+                        {{ form.email }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Оценка *</label>
+                        {{ form.rating }}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Комментарий *</label>
+                        {{ form.comment }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %} 

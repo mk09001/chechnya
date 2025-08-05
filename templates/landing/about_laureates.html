@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Нобелевские лауреаты - Физика Плюс{% endblock %}
+
+{% block content %}
+<!-- Заголовок страницы -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h1 class="section-title">Нобелевские лауреаты по физике</h1>
+                <p class="lead">
+                    Познакомьтесь с великими учеными, чьи открытия изменили наше понимание Вселенной. 
+                    Наши курсы основаны на их трудах и достижениях.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Список лауреатов -->
+<section class="py-5">
+    <div class="container">
+        <div class="row g-4">
+            {% for laureate in laureates %}
+            <div class="col-lg-6">
+                <div class="card laureate-card h-100">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                {% if laureate.photo %}
+                                    <img src="{{ laureate.photo.url }}" class="laureate-image mb-3" alt="{{ laureate.name }}">
+                                {% else %}
+                                    <div class="laureate-image bg-secondary d-flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fas fa-user fa-2x text-white"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="badge bg-primary mb-2">{{ laureate.nobel_year }}</div>
+                            </div>
+                            <div class="col-md-8">
+                                <h4 class="card-title">{{ laureate.name }}</h4>
+                                <p class="text-muted mb-2">
+                                    <i class="fas fa-flag me-1"></i>{{ laureate.country }}
+                                    {% if laureate.birth_year %}
+                                        • <i class="fas fa-calendar me-1"></i>{{ laureate.birth_year }}
+                                        {% if laureate.death_year %}-{{ laureate.death_year }}{% endif %}
+                                    {% endif %}
+                                </p>
+                                <h6 class="text-primary mb-2">Открытие:</h6>
+                                <p class="card-text">{{ laureate.discovery }}</p>
+                                <h6 class="text-primary mb-2">Биография:</h6>
+                                <p class="card-text">{{ laureate.biography|truncatewords:30 }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <div class="py-5">
+                    <i class="fas fa-medal fa-4x text-muted mb-3"></i>
+                    <h3>Лауреаты пока не добавлены</h3>
+                    <p class="text-muted">Информация о нобелевских лауреатах будет добавлена в ближайшее время.</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Призыв к действию -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="section-title">Изучайте с лучшими</h2>
+                <p class="lead mb-4">
+                    Начните изучение теоретической физики с курсов, основанных на трудах 
+                    нобелевских лауреатов
+                </p>
+                <a href="{% url 'courses:course_list' %}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-graduation-cap me-2"></i>Перейти к курсам
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %} 
