@@ -15,7 +15,7 @@
 
 - **Framework**: Django 4.2.7
 - **Language**: Python 3.8+
-- **Database**: SQLite (development) / PostgreSQL (production)
+- **Database**: SQLite (простая и надежная)
 - **Static Files**: WhiteNoise
 - **Deployment**: Render.com
 
@@ -25,8 +25,6 @@
 - Django 4.2.7
 - Gunicorn 20.1.0
 - WhiteNoise 6.5.0
-- psycopg2-binary 2.9.6
-- dj-database-url 2.0.0
 
 ## 🚀 Quick Start
 
@@ -75,7 +73,6 @@
    - `SECRET_KEY` - секретный ключ Django
    - `DEBUG` - False для production
    - `ALLOWED_HOSTS` - разрешенные домены
-   - `DATABASE_URL` - URL базы данных PostgreSQL
 
 2. **Соберите статические файлы**
    ```bash
@@ -133,11 +130,10 @@ physics_courses/
 - `SECRET_KEY` - секретный ключ Django
 - `DEBUG` - режим отладки (True/False)
 - `ALLOWED_HOSTS` - список разрешенных доменов
-- `DATABASE_URL` - URL базы данных
 
 ### Настройки базы данных:
 - **Development**: SQLite (по умолчанию)
-- **Production**: PostgreSQL (через DATABASE_URL)
+- **Production**: SQLite (простая и надежная)
 
 ## 📱 API Endpoints
 
