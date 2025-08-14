@@ -3,8 +3,7 @@ services:
     name: physics-courses
     env: python
     plan: free
-    buildCommand: "./build.sh"
-    startCommand: "./start.sh"
+    startCommand: "gunicorn physics_courses.wsgi_production:application"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
