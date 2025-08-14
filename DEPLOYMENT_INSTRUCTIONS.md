@@ -4,7 +4,7 @@
 
 ### 1. Убедитесь, что все файлы готовы:
 - ✅ `requirements.txt` - зависимости Python
-- ✅ `Procfile` - конфигурация запуска
+- ✅ `build.sh` - скрипт сборки
 - ✅ `physics_courses/production_settings.py` - production настройки
 - ✅ `physics_courses/wsgi_production.py` - production WSGI
 
@@ -32,8 +32,8 @@
 5. **Root Directory**: оставьте пустым (если проект в корне)
 
 ### Шаг 4: Команды
-1. **Build Command**: оставьте пустым (Render автоматически установит зависимости)
-2. **Start Command**: оставьте пустым (используется Procfile)
+1. **Build Command**: `./build.sh`
+2. **Start Command**: `gunicorn physics_courses.wsgi_production:application`
 
 ### Шаг 5: Переменные окружения
 Добавьте следующие переменные в разделе "Environment Variables":
@@ -49,10 +49,8 @@ ALLOWED_HOSTS=your-app-name.onrender.com,localhost,127.0.0.1,.onrender.com,.rend
 ### Шаг 6: Запуск деплоя
 1. Нажмите "Create Web Service"
 2. Render автоматически:
-   - Установит зависимости из `requirements.txt`
-   - Выполнит `python manage.py collectstatic`
-   - Выполнит `python manage.py migrate`
-   - Запустит сервер через `Procfile`
+   - Выполнит `./build.sh` (установка зависимостей, collectstatic, migrate)
+   - Запустит `gunicorn physics_courses.wsgi_production:application`
    - Создаст URL для вашего приложения
 
 ## 🔧 Возможные проблемы и решения
@@ -73,8 +71,12 @@ ALLOWED_HOSTS=your-app-name.onrender.com,localhost,127.0.0.1,.onrender.com,.rend
 - Убедитесь, что у приложения есть права на запись в директорию
 
 ### Ошибка: "Static files not found"
-- Render автоматически выполнит `collectstatic`
+- `build.sh` автоматически выполнит `collectstatic`
 - Убедитесь, что `STATIC_ROOT` настроен в `production_settings.py`
+
+### Ошибка: "Permission denied" в build.sh
+- Убедитесь, что `build.sh` имеет права на выполнение
+- В Render это обычно не проблема
 
 ## 📱 Проверка работы
 

@@ -89,8 +89,8 @@
 1. **Подключите GitHub репозиторий**
 2. **Создайте Web Service**
 3. **Настройте переменные окружения**
-4. **Build Command**: оставьте пустым (используется Procfile)
-5. **Start Command**: оставьте пустым (используется Procfile)
+4. **Build Command**: `./build.sh`
+5. **Start Command**: `gunicorn physics_courses.wsgi_production:application`
 
 ## 📁 Project Structure
 
@@ -104,7 +104,7 @@ physics_courses/
 ├── static/                   # Static files (CSS, JS, images)
 ├── media/                    # User uploaded files
 ├── requirements.txt          # Python dependencies
-├── Procfile                  # Procfile for Render deployment
+├── build.sh                  # Build script for Render
 └── README.md                 # This file
 ```
 
