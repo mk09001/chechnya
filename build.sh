@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
-# exit on error
-set -o errexit
 
+# Простой и надежный скрипт сборки для Render.com
+echo "🚀 Начинаем сборку проекта..."
+
+# Установка зависимостей
+echo "📦 Устанавливаем зависимости..."
+pip install --upgrade pip
 pip install -r requirements.txt
 
-python manage.py collectstatic --no-input
-python manage.py migrate 
+# Сборка статических файлов
+echo "📁 Собираем статические файлы..."
+python manage.py collectstatic --noinput --clear
+
+# Миграции базы данных
+echo "🗄️ Выполняем миграции..."
+python manage.py migrate --noinput
+
+echo "✅ Сборка завершена успешно!" 
